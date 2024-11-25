@@ -1,0 +1,23 @@
+name: gptq
+channels: 
+  - conda-forge
+  - defaults 
+  - nvidia 
+  - pytorch
+dependencies:
+  - pip=24.2
+  - python=3.10.15
+  - pytorch-cuda=12.1
+  - pytorch=2.1.0
+  - pip:
+    - safetensors==0.3.1
+    - datasets==2.10.1
+    - sentencepiece
+    - transformers==4.37.2
+    - accelerate==0.20.3
+    - triton==2.0.0
+    - texttable
+    - toml
+    - numpy
+    - protobuf==3.20.2
+

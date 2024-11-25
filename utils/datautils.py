@@ -61,8 +61,8 @@ def get_ptb(nsamples, seed, seqlen, model):
 
 def get_c4(nsamples, seed, seqlen, model):
     from datasets import load_dataset
-    traindata = load_dataset('allenai/c4', 'allenai--c4', data_files={'train': 'en/c4-train.00000-of-01024.json.gz'}, split='train', use_auth_token=False)
-    valdata = load_dataset('allenai/c4', 'allenai--c4', data_files={'validation': 'en/c4-validation.00000-of-00008.json.gz'}, split='validation', use_auth_token=False)
+    traindata = load_dataset('allenai/c4', data_files={'train': 'en/c4-train.00000-of-01024.json.gz'}, split='train', token=False)
+    valdata = load_dataset('allenai/c4', data_files={'validation': 'en/c4-validation.00000-of-00008.json.gz'}, split='validation', token=False)
 
     from transformers import AutoTokenizer
     try:
@@ -77,7 +77,7 @@ def get_c4(nsamples, seed, seqlen, model):
         while True:
             i = random.randint(0, len(traindata) - 1)
             trainenc = tokenizer(traindata[i]['text'], return_tensors='pt')
-            if trainenc.input_ids.shape[1] >= seqlen:
+            if trainenc.input_ids.shape[1] > seqlen:
                 break
         i = random.randint(0, trainenc.input_ids.shape[1] - seqlen - 1)
         j = i + seqlen
@@ -93,7 +93,7 @@ def get_c4(nsamples, seed, seqlen, model):
         while True:
             i = random.randint(0, len(valdata) - 1)
             tmp = tokenizer(valdata[i]['text'], return_tensors='pt')
-            if tmp.input_ids.shape[1] >= seqlen:
+            if tmp.input_ids.shape[1] > seqlen:
                 break
         i = random.randint(0, tmp.input_ids.shape[1] - seqlen - 1)
         j = i + seqlen
@@ -138,8 +138,8 @@ def get_ptb_new(nsamples, seed, seqlen, model):
 
 def get_c4_new(nsamples, seed, seqlen, model):
     from datasets import load_dataset
-    traindata = load_dataset('allenai/c4', 'allenai--c4', data_files={'train': 'en/c4-train.00000-of-01024.json.gz'}, split='train')
-    valdata = load_dataset('allenai/c4', 'allenai--c4', data_files={'validation': 'en/c4-validation.00000-of-00008.json.gz'}, split='validation')
+    traindata = load_dataset('allenai/c4', data_files={'train': 'en/c4-train.00000-of-01024.json.gz'}, split='train')
+    valdata = load_dataset('allenai/c4', data_files={'validation': 'en/c4-validation.00000-of-00008.json.gz'}, split='validation')
 
     from transformers import AutoTokenizer
     try:
@@ -154,7 +154,7 @@ def get_c4_new(nsamples, seed, seqlen, model):
         while True:
             i = random.randint(0, len(traindata) - 1)
             trainenc = tokenizer(traindata[i]['text'], return_tensors='pt')
-            if trainenc.input_ids.shape[1] >= seqlen:
+            if trainenc.input_ids.shape[1] > seqlen:
                 break
         i = random.randint(0, trainenc.input_ids.shape[1] - seqlen - 1)
         j = i + seqlen

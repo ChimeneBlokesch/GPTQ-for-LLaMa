@@ -219,7 +219,6 @@ def llama_eval(model, testenc, dev):
     position_ids = cache['position_ids']
 
     for i in range(len(layers)):
-        print(i)
         layer = layers[i].to(dev)
 
         if args.nearest:
@@ -269,7 +268,6 @@ def llama_pack(model, quantizers, wbits, groupsize):
     qlayers = find_layers(model, [quant.QuantLinear])
     print('Packing ...')
     for name in qlayers:
-        print(name)
         quantizers[name], scale, zero, g_idx, _, _ = quantizers[name]
         qlayers[name].pack(layers[name], scale, zero, g_idx)
     print('Done.')

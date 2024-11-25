@@ -8,6 +8,7 @@ def export_quant_table(quantizers: dict, quant_dir: str, format: str = 'toml'):
     table = {}
 
     def save_tensor(name: str, tensor):
+        os.makedirs(quant_dir, exist_ok=True)
         np.save(os.path.join(quant_dir, name), tensor.numpy())
         return '{}.npy'.format(name)
 
@@ -19,6 +20,7 @@ def export_quant_table(quantizers: dict, quant_dir: str, format: str = 'toml'):
         sym = quantizer.sym
         if not sym:
             dump['zero'] = save_tensor(name=key + '.zero', tensor=value[2])
+
         dump['scale'] = save_tensor(name=key + '.scale', tensor=value[1])
         dump['wbits'] = value[4]
         dump['groupsize'] = value[5]
