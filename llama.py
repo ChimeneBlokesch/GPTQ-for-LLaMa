@@ -487,6 +487,8 @@ if __name__ == '__main__':
                         help='Save quantized checkpoint under this name.')
     parser.add_argument('--save_safetensors', type=str, default='',
                         help='Save quantized `.safetensors` checkpoint under this name.')
+    parser.add_argument('--save_model', type=str, default='',
+                        help='Save quantized model under this name.')
     parser.add_argument('--load', type=str, default='',
                         help='Load quantized model.')
     parser.add_argument('--benchmark', type=int, default=0,
@@ -584,3 +586,7 @@ if __name__ == '__main__':
         state_dict = model.state_dict()
         state_dict = {k: v.clone().contiguous() for k, v in state_dict.items()}
         safe_save(state_dict, args.save_safetensors)
+
+    if not args.observe and args.save_model:
+        llama_pack(model, quantizers, args.wbits, args.groupsize)
+        model.save_pretrained(args.save_model)
