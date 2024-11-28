@@ -29,12 +29,14 @@ llama3_8b="meta-llama/Meta-Llama-3-8B"  # Llama 3 8B
 wbits=8
 groupsize=-1
 
-tensors_file="llama8b-${wbits}bit-${groupsize}.safetensors"
+model_name="llama8b-${wbits}bit-${groupsize}"
+save="--save ${model_name}.pt"
+save_tensors="" #"--save_safetensors ${model_name}.safetensors"
 
 echo "Starting with ${wbits} bits and groupsize ${groupsize}."
 
 # Quantize with GPTQ
-echo -e "y\n" | python3 llama.py --wbits ${wbits} --groupsize ${groupsize} --eval --save_safetensors ${tensors_file} ${llama3_8b} wikitext2
+echo -e "y\n" | python3 llama.py --wbits ${wbits} --groupsize ${groupsize} --eval ${save} ${save_tensors} ${llama3_8b} wikitext2
 
 echo "Done with ${wbits} bits and groupsize ${groupsize}."
 
