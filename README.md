@@ -1,3 +1,7 @@
+# Forked repo
+
+For this fork, the environment from [https://github.com/SilviaUvA/LLaMA3-Quantization](https://github.com/SilviaUvA/LLaMA3-Quantization) is used.
+
 # GPTQ-for-LLaMA
 
 **I am currently focusing on [AutoGPTQ](https://github.com/PanQiWei/AutoGPTQ) and recommend using [AutoGPTQ](https://github.com/PanQiWei/AutoGPTQ) instead of GPTQ for Llama.**
@@ -104,7 +108,7 @@ According to [GPTQ paper](https://arxiv.org/abs/2210.17323), As the size of the 
 | [GPTQ-128g](https://arxiv.org/abs/2210.17323)                    |  4.15               |     8589    |    5.02   |
 | [nf4-double_quant](https://arxiv.org/abs/2305.14314)             |  4.127              |     8581    |    5.04   |
 | [nf4](https://arxiv.org/abs/2305.14314)                          |  4.5                |     9170    |    5.04   |
-| [fp4](https://arxiv.org/abs/2212.09720)                          |  4.5                |     9170    |    5.11   |  
+| [fp4](https://arxiv.org/abs/2212.09720)                          |  4.5                |     9170    |    5.11   |
 </details>
 
 <details>
@@ -117,7 +121,7 @@ According to [GPTQ paper](https://arxiv.org/abs/2210.17323), As the size of the 
 | [nf4-double_quant](https://arxiv.org/abs/2305.14314)             |  4.127              |    18313    |    3.76   |
 | [nf4](https://arxiv.org/abs/2305.14314)                          |  4.5                |    19729    |    3.75   |
 | [fp4](https://arxiv.org/abs/2212.09720)                          |  4.5                |    19729    |    3.75   |
-  
+
 </details>
 
 ## Installation
