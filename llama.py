@@ -489,6 +489,8 @@ if __name__ == '__main__':
                         help='Save quantized `.safetensors` checkpoint under this name.')
     parser.add_argument('--save_model', type=str, default='',
                         help='Save quantized model under this name.')
+    parser.add_argument('--load_save_only', action='store_true',
+                        help='Whether to skip the quantization and only perform load and save of the model, for conversion.')
     parser.add_argument('--load', type=str, default='',
                         help='Load quantized model.')
     parser.add_argument('--benchmark', type=int, default=0,
@@ -524,6 +526,10 @@ if __name__ == '__main__':
 
     if args.load:
         model = load_quant(args.model, args.load, args.wbits, args.groupsize)
+        if not args.observe and args.save_model and args.load_save_only:
+            # Save the current model from the .pt file
+            model.save_pretrained(args.save_model)
+
     else:
         model = get_llama(args.model)
         model.eval()
