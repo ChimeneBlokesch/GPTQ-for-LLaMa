@@ -27,8 +27,8 @@ pip install triton==2.0.0
 
 llama3_8b="meta-llama/Meta-Llama-3-8B"  # Llama 3 8B
 
-wbits=8
-groupsize=-1
+wbits=4
+groupsize=128
 
 model_name="llama8b-${wbits}bit-${groupsize}g"
 model_file="tensors/${model_name}/${model_name}.pt"
@@ -42,7 +42,7 @@ load_save_only="--load_save_only"
 echo "Starting with ${wbits} bits and groupsize ${groupsize}."
 
 # Quantize with GPTQ
-echo -e "y\n" | python3 llama.py --wbits ${wbits} --groupsize ${groupsize} --eval ${save} ${save_tensors} ${load} ${load_save_only} ${llama3_8b} wikitext2
+echo -e "y\n" | python3 llama.py --wbits ${wbits} --groupsize ${groupsize} --eval ${save} ${save_tensors} ${save_model} ${load} ${load_save_only} ${llama3_8b} wikitext2
 
 echo "Done with ${wbits} bits and groupsize ${groupsize}."
 
