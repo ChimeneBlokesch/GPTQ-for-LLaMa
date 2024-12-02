@@ -9,6 +9,8 @@ from gptq import GPTQ, Observer
 from utils import find_layers, DEV, set_seed, get_wikitext2, get_ptb, get_c4, get_ptb_new, get_c4_new, get_loaders, export_quant_table, gen_conditions
 from texttable import Texttable
 
+from transformers import LlamaTokenizer, TextStreamer, AutoTokenizer
+
 
 def get_llama(model):
 
@@ -265,7 +267,7 @@ def llama_eval(model, testenc, dev):
             hidden_states = model.model.norm(hidden_states)
         lm_logits = model.lm_head(hidden_states)
         shift_logits = lm_logits[:, :-1, :].contiguous()
-        shift_labels = testenc[:, (i * model.seqlen):((i + 1) * model.seqlen)][:, 1:]
+        shift_labels = testenc[:, (i * model.seqlen)                               :((i + 1) * model.seqlen)][:, 1:]
         loss_fct = nn.CrossEntropyLoss()
         loss = loss_fct(
             shift_logits.view(-1, shift_logits.size(-1)), shift_labels.view(-1))
@@ -526,9 +528,20 @@ if __name__ == '__main__':
 
     if args.load:
         model = load_quant(args.model, args.load, args.wbits, args.groupsize)
+
         if not args.observe and args.save_model and args.load_save_only:
-            # Save the current model from the .pt file
             model.save_pretrained(args.save_model)
+
+            if "llama3" in args.model.lower() or "llama-3" in args.model.lower():
+                tokenizer = AutoTokenizer.from_pretrained(args.model,
+                                                          use_fast=False)
+                tokenizer.save_pretrained(args.save_model)
+            else:
+                tokenizer = LlamaTokenizer.from_pretrained(args.model,
+                                                           use_fast=False)
+                tokenizer.save(args.save_model)
+
+            exit(0)
 
     else:
         model = get_llama(args.model)
@@ -571,8 +584,15 @@ if __name__ == '__main__':
         else:
             model = model.to(DEV)
 
-        from transformers import LlamaTokenizer, TextStreamer
-        tokenizer = LlamaTokenizer.from_pretrained(args.model, use_fast=False)
+        if "llama3" in args.model.lower() or "llama-3" in args.model.lower():
+            tokenizer = AutoTokenizer.from_pretrained(args.model,
+                                                      use_fast=False)
+            tokenizer.save_pretrained(args.save_model)
+        else:
+            tokenizer = LlamaTokenizer.from_pretrained(args.model,
+                                                       use_fast=False)
+            tokenizer.save(args.save_model)
+
         input_ids = tokenizer(["The capital of New Mexico is"],
                               return_tensors="pt").input_ids.to(gpus[0])
         streamer = TextStreamer(tokenizer)
