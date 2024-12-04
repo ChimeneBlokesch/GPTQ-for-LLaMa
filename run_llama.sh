@@ -30,7 +30,7 @@ llama3_8b="meta-llama/Meta-Llama-3-8B"  # Llama 3 8B
 wbits=4
 groupsize=128
 
-model_name="llama8b-${wbits}bit-${groupsize}g"
+model_name="llama-3-8b-${wbits}bit-${groupsize}g"
 model_file="tensors/${model_name}/${model_name}.pt"
 safetensor_file="tensors/${model_name}/${model_name}.safetensors"
 save="--save ${model_file}"
