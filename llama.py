@@ -11,9 +11,6 @@ from texttable import Texttable
 
 from transformers import LlamaTokenizer, TextStreamer, AutoTokenizer
 
-# Only used to save quantized models
-from hqq.models.hf.base import AutoHQQHFModel
-
 
 def get_llama(model):
 
@@ -533,8 +530,7 @@ if __name__ == '__main__':
         model = load_quant(args.model, args.load, args.wbits, args.groupsize)
 
         if not args.observe and args.save_model and args.load_save_only:
-            # model.save_pretrained(args.save_model)
-            AutoHQQHFModel.save_quantized(model, args.save_model)
+            model.save_pretrained(args.save_model)
 
             if "llama3" in args.model.lower() or "llama-3" in args.model.lower():
                 tokenizer = AutoTokenizer.from_pretrained(args.model,

@@ -23,7 +23,6 @@ pip install transformers==4.37.2
 
 pip install toml
 pip install triton==2.0.0
-pip install hqq
 
 
 llama3_8b="meta-llama/Meta-Llama-3-8B"  # Llama 3 8B
