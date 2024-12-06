@@ -6,7 +6,7 @@ import torch.nn as nn
 import transformers
 import quant
 from texttable import Texttable
-from utils import torch_snr_error
+from .utils import torch_snr_error
 
 torch.backends.cuda.matmul.allow_tf32 = False
 torch.backends.cudnn.allow_tf32 = False
@@ -37,7 +37,8 @@ class Observer:
             self.loss_list[min_idx] = item
 
     def print(self):
-        self.loss_list = sorted(self.loss_list, key=lambda s: s[2]['error'], reverse=True)
+        self.loss_list = sorted(
+            self.loss_list, key=lambda s: s[2]['error'], reverse=True)
 
         table = Texttable()
 
@@ -87,7 +88,8 @@ class GPTQ:
                 inp = inp.reshape((-1, inp.shape[-1]))
             inp = inp.t()
         if isinstance(self.layer, nn.Conv2d):
-            unfold = nn.Unfold(self.layer.kernel_size, dilation=self.layer.dilation, padding=self.layer.padding, stride=self.layer.stride)
+            unfold = nn.Unfold(self.layer.kernel_size, dilation=self.layer.dilation,
+                               padding=self.layer.padding, stride=self.layer.stride)
             inp = unfold(inp)
             inp = inp.permute([1, 0, 2])
             inp = inp.flatten(1)
@@ -102,10 +104,12 @@ class GPTQ:
         table = Texttable()
         name += ' ' * (16 - len(name))
 
-        table.header(['name', 'weight_error', 'fp_inp_SNR', 'q_inp_SNR', 'time'])
+        table.header(
+            ['name', 'weight_error', 'fp_inp_SNR', 'q_inp_SNR', 'time'])
 
         # assign weight
-        self.layer.weight.data = q_weight.reshape(self.layer.weight.shape).to(self.layer.weight.data.dtype)
+        self.layer.weight.data = q_weight.reshape(
+            self.layer.weight.shape).to(self.layer.weight.data.dtype)
 
         if self.inp1 is not None:
             # quantize input to int8
@@ -184,7 +188,8 @@ class GPTQ:
 
                 if groupsize != -1:
                     if (i1 + i) % groupsize == 0:
-                        self.quantizer.find_params(W[:, (i1 + i):(i1 + i + groupsize)], weight=True)
+                        self.quantizer.find_params(
+                            W[:, (i1 + i):(i1 + i + groupsize)], weight=True)
 
                     if ((i1 + i) // groupsize) - now_idx == -1:
                         scale.append(self.quantizer.scale)
@@ -196,7 +201,8 @@ class GPTQ:
                 Losses1[:, i] = (w - q)**2 / d**2
 
                 err1 = (w - q) / d
-                W1[:, i:] -= err1.unsqueeze(1).matmul(Hinv1[i, i:].unsqueeze(0))
+                W1[:,
+                    i:] -= err1.unsqueeze(1).matmul(Hinv1[i, i:].unsqueeze(0))
                 Err1[:, i] = err1
 
             Q[:, i1:i2] = Q1
@@ -218,7 +224,8 @@ class GPTQ:
         if isinstance(self.layer, transformers.Conv1D):
             Q = Q.t()
 
-        self.print_loss(name=name, q_weight=Q, weight_error=error, timecost=(time.time() - tick))
+        self.print_loss(name=name, q_weight=Q, weight_error=error,
+                        timecost=(time.time() - tick))
 
         if scale == []:
             scale.append(self.quantizer.scale)
